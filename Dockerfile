@@ -1,22 +1,19 @@
-# ---------------------------------------
-# Generic Wine image based on Wine stable 
-# ---------------------------------------
-FROM            ghcr.io/parkervcp/yolks:debian
+FROM            debian:bookworm-slim
 
-LABEL           author="Michael Parker" maintainer="parker@pterodactyl.io"
+LABEL           author="William" maintainer="me@stylite.me"
 LABEL           org.opencontainers.image.licenses=MIT
 
 ## install required packages
 RUN             dpkg --add-architecture i386 \
                 && apt update -y \
-                && apt install -y --no-install-recommends gnupg2 numactl tzdata software-properties-common libntlm0 winbind xvfb xauth python3 libncurses5:i386 libncurses6:i386 libsdl2-2.0-0 libsdl2-2.0-0:i386
+                && apt install -y --no-install-recommends gnupg2 numactl tzdata software-properties-common libntlm0 winbind xvfb xauth python3 libncurses5:i386 libncurses6:i386 libsdl2-2.0-0 libsdl2-2.0-0:i386 wget
 
 # Install wine and with recommends
 RUN             mkdir -pm755 /etc/apt/keyrings
 RUN             wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-RUN             wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bullseye/winehq-bullseye.sources
+RUN             wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources
 RUN             apt update
-RUN             apt install --install-recommends winehq-stable=8.0~bullseye wine-stable=8.0~bullseye wine-stable-amd64=8.0~bullseye wine-stable-i386:i386=8.0~bullseye cabextract wine-binfmt -y
+RUN             apt install winehq-stable=8.0.1~bookworm-1 wine-stable=8.0.1~bookworm-1 wine-stable-amd64=8.0.1~bookworm-1 wine-stable-i386=8.0.1~bookworm-1 cabextract wine-binfmt -y
 
 # Set up Winetricks
 RUN	            wget -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
